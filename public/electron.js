@@ -3,9 +3,6 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 
-const isDev = require('electron-is-dev');
-
-
 /*************************************************************
  * py process
  *************************************************************/
@@ -70,15 +67,7 @@ var mainWindow = null
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({width: 800, height: 600, webPreferences: {nodeIntegration: true, contextIsolation: false}})
-  win.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-  // Open the DevTools.
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
+  win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
 
   mainWindow.on('closed', () => {
     mainWindow = null

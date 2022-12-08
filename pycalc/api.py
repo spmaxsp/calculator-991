@@ -1,17 +1,24 @@
 from __future__ import print_function
 from calc import do_calculation
-from flask import Flask
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # server routes
 @app.route("/ping")
 def ping():
     return "OK"
 
-@app.route("/calc/<text>")
+@app.route("/calc", methods=["POST"])
 def calc():
-    return do_calculation(text)
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        json = request.json
+        print(json)
+        if (json and 'latex' in json):
+            return jsonify({"result": do_calculation(json['latex'])})
 
 # server start
 def parse_port():
