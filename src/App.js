@@ -1,15 +1,33 @@
 import "./App.css";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+
 import MathView from "react-math-view";
-import virtualKeyboardContainer from "react-math-view";
-import { executeCommand } from "react-math-view";
+
+import 'katex/dist/katex.min.css';
+import TeX from '@matejmazur/react-katex';
+
+function Key(props) {
+
+  return (
+  <div className="Key">
+    <div className="Key-text">
+      <small className="Key-shift"><TeX math={props.shift} /></small>
+      <small className="Key-alpha"><TeX math={props.alpha} /></small>
+    </div>
+    <button className="Button" onClick={props.onClick}><TeX math={props.main} /></button>
+  </div>
+  );
+}
+
 
 export default function App() {
   const [latex_out, setOut] = useState("");
   const [latex_in, setIn] = useState("");
   const mathinRef = useRef(null);
   const mathoutRef = useRef(null);
-  function output() {
+
+
+  function calculate() {
     setIn(mathinRef.current?.getValue());
     const requestOptions = {
         method: 'POST',
@@ -27,51 +45,135 @@ export default function App() {
             console.log("error: " + error);
         }
     )
-      //setOut(mathinRef.current?.getValue());
+  };
+  
+  const [alpha, toggleA] = useState(false);
+  const [shift, toggleS] = useState(false);
+
+  function insert(key, keys, keya) {
+    mathinRef.current?.focus(); 
+    if (alpha) {
+      mathinRef.current?.executeCommand(['insert', keya]); 
+    }
+    else if (shift) {
+      mathinRef.current?.executeCommand(['insert', keys]); 
+    }
+    else {
+      mathinRef.current?.executeCommand(['insert', key]); 
+    }
+    toggleS(false)
+    toggleA(false)
   };
 
-  useLayoutEffect(() => {
-    document.getElementById("mf").setOptions({virtualKeyboardContainer: document.getElementById("keys") });
-    mathinRef.current.focus();
-  }, []);
-  
-  function press(key) {
-    console.log("button: " + key);
+  function cursor(key) {
     mathinRef.current?.focus(); 
-    mathinRef.current?.executeCommand(['insert', key]); 
-  };
+    if (key == "left") {
+      mathinRef.current?.executeCommand(['moveToPreviousChar']); 
+    }
+    else if (key == "right") {  
+      mathinRef.current?.executeCommand(['moveToNextChar']); 
+    }
+    else if (key == "up") {
+      mathinRef.current?.executeCommand(['moveUp']); 
+    }
+    else if (key == "down") {
+      mathinRef.current?.executeCommand(['moveDown']); 
+    }
+  }
+
+  function clear() { 
+    mathinRef.current?.focus(); 
+    mathinRef.current?.executeCommand(['moveToMathFieldStart']); 
+    mathinRef.current?.executeCommand(['deleteToMathFieldEnd']); 
+  }
+
+  function back() { 
+    mathinRef.current?.focus(); 
+    mathinRef.current?.executeCommand(['deleteBackward']); 
+  }
 
 
   return (
     <div className="App">
-      <h1>Calculate</h1>
-      <h2>Input</h2>
-      <MathView
-        id="mf"
-        virtualKeyboardMode="manual"
-        virtuelKeyboardTrigger="manual"
-        value=""
-        ref={mathinRef}
-      />
-      <button onClick={() => press('\\frac{1}{2}')}>Test frac</button>
-      <button onClick={() => press('\\int #0 d #0')}>Test int</button>
+      <div className="Calculator">
+        <div className="Screen">
+          <MathView
+            id="mf"
+            virtualKeyboardMode="off"
+            virtuelKeyboardTrigger="off"
+            value=""
+            ref={mathinRef}
+          />
+          <MathView
+            virtualKeyboardMode="off"
+            virtuelKeyboardTrigger="off"
+            value={latex_out}
+            ref={mathoutRef}
+          />
+        </div>
+        <div className="Keyboard-upper">
+          <Key main="\text{SHIFT}"             shift=""           alpha=""    onClick={() => toggleS(!shift)}/>
+          <Key main="\text{ALPHA}"             shift=""           alpha=""    onClick={() => toggleA(!alpha)}/>
+          <Key main="\leftarrow"               shift=""           alpha=""    onClick={() => cursor("left")} />
+          <Key main="\rightarrow"              shift=""           alpha=""    onClick={() => cursor("right")}/>
+          <Key main="\text{MODE}"              shift=""           alpha="" />
+          <Key main="\text{2nd}"               shift=""           alpha="" />
+          
+          <Key main="\text{OPTN}"              shift=""           alpha="" />
+          <Key main="="                        shift=""           alpha=""     onClick={() => insert("=", "", "")}/>
+          <Key main="\blacktriangle"           shift=""           alpha=""     onClick={() => cursor("up")}       />
+          <Key main="\blacktriangledown"       shift=""           alpha=""     onClick={() => cursor("down")}     />
+          <Key main="\int dx"                  shift="d/dx"       alpha=""     onClick={() => insert("\\int_{#0}^#0 #0 dx", "\\frac{d}{dx} #0", "")}/>
+          <Key main="x"                        shift="\sum"       alpha=""     onClick={() => insert("x", "\\sum_{x=#0}^#0 #0", "")}/>
 
-      <button onClick={output}>Calc</button>
-      <div style={{ marginTop: 30 }}>
-        <a> {latex_in} </a>
-      </div>
+          <Key main="\frac{\square}{\square}"  shift="a^{b/c}"    alpha=""     onClick={() => insert("\\frac{#0}{#0}", "#0\\frac{#0}{#0}", "")}/>
+          <Key main="\sqrt{\square}"           shift="^3\sqrt y"  alpha=""     onClick={() => insert("\\sqrt{#0}", "\\sqrt[3]{#0}", "")}/>
+          <Key main="x^2"                      shift="x^3"        alpha="\cot" onClick={() => insert("#0^2", "#0^3", "\\cot(#0)")}/>
+          <Key main="x^y"                      shift="^x\sqrt y"  alpha="\cot^{-1}" onClick={() => insert("#0^#0", "\\sqrt[#0]{#0}", "\\cot^{-1}(#0)")}/>
+          <Key main="\log_a x"                 shift="10^x"       alpha=""     onClick={() => insert("\\log_#0 (#0)", "10^x", "")}/>
+          <Key main="\ln"                      shift="e^x"        alpha="\pi"     onClick={() => insert("\\ln (#0)", "e^#0", "\\pi")}/>
 
-      <h2>Output</h2>
-      <MathView
-        virtualKeyboardMode="manual"
-        value={latex_out}
-        ref={mathoutRef}
-      />
-      <div style={{ marginTop: 30 }}>
-        <a> {latex_out} </a>
-      </div>
-      
-      <div id="keys" style={{position: "relative", with: "30%"}} /> 
+          <Key main="-"                        shift="\log"       alpha="a"     onClick={() => insert("-", "\\log (#0)", "a")}/>
+          <Key main="\degree"                  shift="^3\sqrt y"  alpha="b"     onClick={() => insert("\\degree", "\\sqrt[3]{#0}", "b")}/>
+          <Key main="x^{-1}"                   shift="x!"         alpha="c"     onClick={() => insert("#0^{-1}", "!", "c")}/>
+          <Key main="\sin"                     shift="\arcsin"    alpha="d"     onClick={() => insert("\\sin(#0)", "\\arcsin(#0)", "d")}/>
+          <Key main="\cos"                     shift="\arccos"    alpha="e"     onClick={() => insert("\\cos(#0)", "\\arccos(#0)", "e")}/>
+          <Key main="\tan"                     shift="\arctan"    alpha="f"     onClick={() => insert("\\tan(#0)", "\\arctan(#0)", "f")}/>
+
+          <Key main="\text{STO}"               shift="\text{RCL}" alpha="" />
+          <Key main="\text{ENG}"               shift="\angle"     alpha="i"     onClick={() => insert("", "\\angle", "i")}/>
+          <Key main="("                        shift="\text{Abs}" alpha="y"     onClick={() => insert("(", "\\vert #0 \\vert", "y")}/>
+          <Key main=")"                        shift=","          alpha="z"     onClick={() => insert(")", ",", "z")}/>
+          <Key main="S \leftrightharpoons D"   shift=""           alpha="" />
+          <Key main="M"                        shift=""           alpha="" />
+        </div>
+        <div className="Keyboard-lower"> 
+          <Key main="7"     shift="" alpha="" onClick={() => insert("7", "", "")}/>
+          <Key main="8"     shift="" alpha="" onClick={() => insert("8", "", "")}/>
+          <Key main="9"     shift="" alpha="" onClick={() => insert("9", "", "")}/>
+          <Key main="\text{DEL}" shift="" alpha="" onClick={back}/>
+          <Key main="\text{CLR}" shift="" alpha="" onClick={clear}/>
+
+          <Key main="4"     shift="" alpha="" onClick={() => insert("4", "", "")}/>
+          <Key main="5"     shift="" alpha="" onClick={() => insert("5", "", "")}/>
+          <Key main="6"     shift="" alpha="" onClick={() => insert("6", "", "")}/>
+          <Key main="\times" shift="" alpha="" onClick={() => insert("\\times", "", "")}/>
+          <Key main="\div"   shift="" alpha="" onClick={() => insert("\\div", "", "")}/>
+
+          <Key main="1"     shift="" alpha="" onClick={() => insert("1", "", "")}/>
+          <Key main="2"     shift="" alpha="" onClick={() => insert("2", "", "")}/>
+          <Key main="3"     shift="" alpha="" onClick={() => insert("3", "", "")}/>
+          <Key main="+"     shift="" alpha="" onClick={() => insert("+", "", "")}/>
+          <Key main="-"     shift="" alpha="" onClick={() => insert("-", "", "")}/>
+
+          <Key main="0"     shift="" alpha="" onClick={() => insert("0", "", "")}/>
+          <Key main="."     shift="" alpha="" onClick={() => insert(".", "", "")}/>
+          <Key main="\text{Exp}" shift="" alpha="" />
+          <Key main="\text{Ans}" shift="" alpha="" />
+          <Key main="="     shift="" alpha="" onClick={calculate}/>
+
+        </div>
+      </div>  
     </div>
   );
 }
