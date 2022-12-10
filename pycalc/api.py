@@ -1,22 +1,24 @@
-from __future__ import print_function
-from calc import do_calculation
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-
 from flask import Flask, request
+from flask_cors import CORS
 import json
 import latex2sympy2
 import sympy
 from sympy.abc import *
 from sympy import *
 from latex2sympy2 import latex2latex, latex2sympy, var, variances, set_variances, set_real, latex
+
 app = Flask(__name__)
+CORS(app)
 
 is_real = False
 
+def preprocess(argument):
+    argument = argument.replace('\\differentialD', 'd')
+    argument = argument.replace('\\mathop{=}', '=')
+    argument = argument.replace('\\angle', '(e^i)^')
+    argument = argument.replace('\\left(', '{(')
+    argument = argument.replace(')\\right', ')}')
+    return argument
 
 @app.route('/')
 def main():
@@ -27,7 +29,7 @@ def main():
 def get_latex():
     try:
         return {
-            'data': latex2latex(request.json['data']),
+            'data': latex2latex(preprocess(request.json['data'])),
             'error': ''
         }
     except Exception as e:
@@ -40,7 +42,7 @@ def get_latex():
 def get_numerical():
     try:
         return {
-            'data': latex(simplify(latex2sympy(request.json['data']).subs(variances).doit().doit()).evalf(subs=variances)),
+            'data': latex(simplify(latex2sympy(preprocess(request.json['data'])).subs(variances).doit().doit()).evalf(subs=variances)),
             'error': ''
         }
     except Exception as e:
@@ -53,7 +55,7 @@ def get_numerical():
 def get_factor():
     try:
         return {
-            'data': latex(factor(latex2sympy(request.json['data']).subs(variances))),
+            'data': latex(factor(latex2sympy(preprocess(request.json['data'])).subs(variances))),
             'error': ''
         }
     except Exception as e:
@@ -66,13 +68,13 @@ def get_factor():
 def get_expand():
     try:
         return {
-            'data': latex(expand(apart(expand_trig(latex2sympy(request.json['data']).subs(variances))))),
+            'data': latex(expand(apart(expand_trig(latex2sympy(preprocess(request.json['data'])).subs(variances))))),
             'error': ''
         }
     except Exception as _:
         try:
           return {
-              'data': latex(expand(expand_trig(latex2sympy(request.json['data']).subs(variances)))),
+              'data': latex(expand(expand_trig(latex2sympy(preprocess(request.json['data'])).subs(variances)))),
               'error': ''
           }
         except Exception as e:
@@ -122,6 +124,15 @@ def run_python():
             'data': '',
             'error': str(e)
         }
+
+# server start
+def parse_port():
+    port = 4242
+    try:
+        port = int(sys.argv[1])
+    except:
+        pass
+    return '{}'.format(port)
 
 def main():
     print('starting server...')
