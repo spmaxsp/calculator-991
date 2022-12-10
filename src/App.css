@@ -33,7 +33,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 5px;
-  margin-top: 10px;
+  padding: 8px;
   height: 30vh;
   grid-auto-rows: calc(30vh/5);
 }
@@ -41,8 +41,8 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 5px;
-  margin-top: 10px;
-  height: 30vh;
+  padding: 8px;
+  height: 25vh;
   grid-auto-rows: calc(30vh/4);
 }
 
@@ -61,13 +61,13 @@
 
 .Key-shift {
   color: rgb(255, 225, 0);
-  font-size: 7px;
+  font-size: 9px;
   float: left;
 }
 
 .Key-alpha {
   color: rgb(255, 0, 34);
-  font-size: 7px;
+  font-size: 9px;
   float: right;
 }
 
