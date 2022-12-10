@@ -6,7 +6,9 @@
 a calculator, written in react. The calculations are based on latex2latex2 from OrangeX4. 
 The whole application will be integrated into an electron package later.
 
-===Attention: The project is still "work in progress". Simple functionalities are already working, but some buttons are not working yet.===
+**Attention: The project is still "work in progress". Simple functionalities are already working, but some buttons are not working yet.**
+
+![screenshot of the calculator](https://github.com/spmaxsp/calculator-991/screenshot.jpeg?raw=true)
 
 ### React frontend
 The frontend is written in React js. The expressions are entered as latex expressions using MathLive from CortexJS.
