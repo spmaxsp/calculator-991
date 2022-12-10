@@ -25,20 +25,29 @@ export default function App() {
   const [latex_in, setIn] = useState("");
   const mathinRef = useRef(null);
   const mathoutRef = useRef(null);
+  
+  var numeric = false;
 
+  var request = "http://127.0.0.1:4242/latex"
 
   function calculate() {
     setIn(mathinRef.current?.getValue());
+    if (numeric) {
+      request = "http://127.0.0.1:4242/latex";
+    }
+    else {
+      request = "http://127.0.0.1:4242/numerical";
+    }
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ latex: mathinRef.current?.getValue()})
+        body: JSON.stringify({ data: mathinRef.current?.getValue()})
     };
-    fetch("http://127.0.0.1:4242/calc", requestOptions)
+    fetch(request, requestOptions)
     .then(res => res.json())
     .then((result) => {
-          setOut(result.result);
-          console.log("result: " + result.result);
+          setOut(result.data);
+          console.log("result: " + result.data);
         },
 
         (error) => {
@@ -49,6 +58,11 @@ export default function App() {
   
   const [alpha, toggleA] = useState(false);
   const [shift, toggleS] = useState(false);
+
+  function calc_numeric() {
+    numeric = !numeric;
+    calculate();
+  }
 
   function insert(key, keys, keya) {
     mathinRef.current?.focus(); 
@@ -144,7 +158,7 @@ export default function App() {
           <Key main="\text{ENG}"               shift="\angle"     alpha="i"     onClick={() => insert("", "\\angle", "i")}/>
           <Key main="("                        shift="\text{Abs}" alpha="y"     onClick={() => insert("(", "\\vert #0 \\vert", "y")}/>
           <Key main=")"                        shift=","          alpha="z"     onClick={() => insert(")", ",", "z")}/>
-          <Key main="S \leftrightharpoons D"   shift=""           alpha="" />
+          <Key main="S \leftrightharpoons D"   shift=""           alpha=""      onClick={calc_numeric} />
           <Key main="M"                        shift=""           alpha="" />
         </div>
         <div className="Keyboard-lower"> 
