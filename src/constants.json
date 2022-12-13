@@ -1,0 +1,346 @@
+{
+  "constants": [
+    {
+      "macro": "constmp",
+      "sym": "m_p",
+      "name": "proton mass",
+      "value": 1.67262192369e-27,
+      "unit": "kg"
+    },
+    {
+      "macro": "constmn",
+      "sym": "m_n",
+      "name": "neutron mass",
+      "value": 1.67492749804e-27,
+      "unit": "kg"
+    },
+    {
+      "macro": "constme",
+      "sym": "m_e",
+      "name": "electron mass",
+      "value": 9.1093837015e-31,
+      "unit": "kg"
+    },
+    {
+      "macro": "constmu",
+      "sym": "m_\\mu",
+      "name": "muon mass",
+      "value": 1.883531627e-28,
+      "unit": "kg"
+    },
+    {
+      "macro": "constBr",
+      "sym": "a_0",
+      "name": "Bohr radius",
+      "value": 5.29177210903e-11,
+      "unit": "m"
+    },
+    {
+      "macro": "consth",
+      "sym": "h",
+      "name": "Planck constant",
+      "value": 6.62607015e-34,
+      "unit": "J \\cdot Hz^{-1}"
+    },
+    {
+      "macro": "constuN",
+      "sym": "\\mu_N",
+      "name": "nuclear magneton",
+      "value": 5.0507837461e-27,
+      "unit": "J \\cdot T^{-1}"
+    },
+    {
+      "macro": "constuB",
+      "sym": "\\mu_B",
+      "name": "Bohr magneton",
+      "value": 9.274009994e-24,
+      "unit": "J \\cdot T^{-1}"
+    },
+    {
+      "macro": "consthr",
+      "sym": "h",
+      "name": "Planck constant, rationalized",
+      "value": 1.054571817e-34,
+      "unit": "J \\cdot s"
+    },
+    {
+      "macro": "constalpha",
+      "sym": "\\alpha",
+      "name": "fine-structure constant",
+      "value": 7.2973525698e-3,
+      "unit": ""
+    },
+    {
+      "macro": "constre",
+      "sym": "r_e",
+      "name": "classical electron radius",
+      "value": 2.8179403262e-15,
+      "unit": "m"
+    },
+    {
+      "macro": "constlc",
+      "sym": "\\lambda_c",
+      "name": "Compton wavelength",
+      "value": 2.4263102389e-12,
+      "unit": "m"
+    },
+    {
+      "macro": "constyp",
+      "sym": "\\gamma_p",
+      "name": "proton gyromagnetic ratio",
+      "value": 2.675222099e8,
+      "unit": "s^{-1} \\cdot T^{-1}"
+    },
+    {
+      "macro": "constlcp",
+      "sym": "\\lambda_{C,p}",
+      "name": "proton Compton wavelength",
+      "value": 1.3214098556e-15,
+      "unit": "m"
+    },
+    {
+      "macro": "constlcn",
+      "sym": "\\lambda_{C,n}",
+      "name": "neutron Compton wavelength",
+      "value": 1.3195909068e-15,
+      "unit": "m"
+    },
+    {
+      "macro": "constlR",
+      "sym": "R\\infty",
+      "name": "Rydberg constant",
+      "value": 10973731.56816,
+      "unit": "m^{-1}"
+    },
+    {
+      "macro": "constu",
+      "sym": "u",
+      "name": "atomic mass unit",
+      "value": 1.6605390666e-27,
+      "unit": "kg"
+    },
+    {
+      "macro": "constup",
+      "sym": "\\mu_p",
+      "name": "proton magnetic moment",
+      "value": 1.410606662e-26,
+      "unit": "J \\cdot T^{-1}"
+    },
+    {
+      "macro": "constue",
+      "sym": "\\mu_e",
+      "name": "electron magnetic moment",
+      "value": -928.476462e-26,
+      "unit": "J \\cdot T^{-1}"
+    },
+    {
+      "macro": "constun",
+      "sym": "\\mu_n",
+      "name": "neutron magnetic moment",
+      "value": -0.96623641e-26,
+      "unit": "J \\cdot T^{-1}"
+    },
+    {
+      "macro": "constuu",
+      "sym": "\\mu_\\mu",
+      "name": "muon magnetic moment",
+      "value": -4.49044826e-26,
+      "unit": "J \\cdot T^{-1}"
+    },
+    {
+      "macro": "constF",
+      "sym": "F",
+      "name": "Faraday constant",
+      "value": 96485.33212331,
+      "unit": "C \\cdot mol^{-1}"
+    },
+    {
+      "macro": "conste",
+      "sym": "e",
+      "name": "elementary charge",
+      "value": 1.602176634e-19,
+      "unit": "C"
+    },
+    {
+      "macro": "constNA",
+      "sym": "N_A",
+      "name": "Avogadro constant",
+      "value": 6.02214076e23,
+      "unit": "mol^{-1}"
+    },
+    {
+      "macro": "constk",
+      "sym": "k",
+      "name": "Boltzmann constant",
+      "value": 1.380649e-23,
+      "unit": "J \\cdot K^{-1}"
+    },
+    {
+      "macro": "constVm",
+      "sym": "Vm",
+      "name": "molar volume of ideal gas",
+      "value": 2.24139682e-2,
+      "unit": "m^{3} \\cdot mol^{-1}"
+    },
+    {
+      "macro": "constR",
+      "sym": "R",
+      "name": "molar gas constant",
+      "value": 8.314462618,
+      "unit": "J \\cdot K^{-1} \\cdot mol^{-1}"
+    },
+    {
+      "macro": "constc0",
+      "sym": "c_0",
+      "name": "speed of light in vacuum",
+      "value": 299792458,
+      "unit": "m \\cdot s^{-1}"
+    },
+    {
+      "macro": "constc1",
+      "sym": "c_1",
+      "name": "first radiation constant",
+      "value": 3.741771852e-16,
+      "unit": "W \\cdot m^{2}"
+    },
+    {
+      "macro": "constc2",
+      "sym": "c_2",
+      "name": "second radiation constant",
+      "value": 1.438777e-2,
+      "unit": "m \\cdot K"
+    },
+    {
+      "macro": "consto",
+      "sym": "\\omega",
+      "name": "Stefan-Boltzmann constant",
+      "value": 5.670367e-8,
+      "unit": "W \\cdot m^{-2} \\cdot K^{-4}"
+    },
+    {
+      "macro": "conste0",
+      "sym": "\\varepsilon_0",
+      "name": "electric constant",
+      "value": 8.8541878128e-12,
+      "unit": "F \\cdot m^{-1}"
+    },
+    {
+      "macro": "constu0",
+      "sym": "\\mu_0",
+      "name": "magnetic constant",
+      "value": 1.25663706212e-6,
+      "unit": "N \\cdot A^{-2}"
+    },
+    {
+      "macro": "constO0",
+      "sym": "\\Phi_0",
+      "name": "magnetic flux quantum",
+      "value": 2.067833831e-15,
+      "unit": "Wb"
+    },
+    {
+      "macro": "constg",
+      "sym": "g",
+      "name": "standard acceleration of gravity",
+      "value": 9.80665,
+      "unit": "m \\cdot s^{-2}"
+    },
+    {
+      "macro": "constG0",
+      "sym": "G_0",
+      "name": "conductance quantum",
+      "value": 7.7480917346e-5,
+      "unit": "S"
+    },
+    {
+      "macro": "constZ0",
+      "sym": "Z_0",
+      "name": "characteristic impedance of vacuum",
+      "value": 376.730313461,
+      "unit": "\\Omega"
+    },
+    {
+      "macro": "constt",
+      "sym": "t",
+      "name": "Celsius temperature",
+      "value": 273.15,
+      "unit": "K"
+    },
+    {
+      "macro": "constG",
+      "sym": "G",
+      "name": "Newtonian constant of gravitation",
+      "value": 6.6743e-11,
+      "unit": "m^{3} \\cdot kg^{-1} \\cdot s^{-2}"
+    },
+    {
+      "macro": "constatm",
+      "sym": "atm",
+      "name": "standard atmosphere (SI unit: Pa)",
+      "value": 101325,
+      "unit": "Pa"
+    }
+  ],
+  "engsym": [
+    {
+      "macro": "engsymm",
+      "sym": "m",
+      "value": "*10^{-3}"
+    },
+    {
+      "macro": "engsymu",
+      "sym": "\\mu",
+      "value": "*10^{-6}"
+    },
+    {
+      "macro": "engsymn",
+      "sym": "n",
+      "value": "*10^{-9}"
+    },
+    {
+      "macro": "engsymp",
+      "sym": "p",
+      "value": "*10^{-12}"
+    },
+    {
+      "macro": "engsymf",
+      "sym": "f",
+      "value": "*10^{-15}"
+    },
+    {
+      "macro": "engsyma",
+      "sym": "a",
+      "value": "*10^{-18}"
+    },
+    {
+      "macro": "engsymk",
+      "sym": "k",
+      "value": "*10^3"
+    },
+    {
+      "macro": "engsymM",
+      "sym": "M",
+      "value": "*10^6"
+    },
+    {
+      "macro": "engsymG",
+      "sym": "G",
+      "value": "*10^9"
+    },
+    {
+      "macro": "engsymT",
+      "sym": "T",
+      "value": "*10^12"
+    },
+    {
+      "macro": "engsymP",
+      "sym": "P",
+      "value": "*10^15"
+    },
+    {
+      "macro": "engsymE",
+      "sym": "E",
+      "value": "*10^18"
+    }
+  ]
+}
