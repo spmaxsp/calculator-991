@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 import json
 import latex2sympy2
@@ -6,11 +6,15 @@ import sympy
 from sympy.abc import *
 from sympy import *
 from latex2sympy2 import latex2latex, latex2sympy, var, variances, set_variances, set_real, latex
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 is_real = False
+
+def root_dir():
+    return os.path.abspath(os.path.dirname(__file__))
 
 def preprocess(argument):
     argument = argument.replace('\\differentialD', 'd')
@@ -24,6 +28,11 @@ def preprocess(argument):
 def main():
     return 'Latex Sympy Calculator Server'
 
+
+@app.route('/constants.json', methods=['GET'])
+def return_const():
+	return send_from_directory(root_dir(), 'constants.json')
+    
 
 @app.route('/latex', methods=['POST'])
 def get_latex():
