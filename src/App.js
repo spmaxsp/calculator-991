@@ -1,5 +1,5 @@
 import "./App.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import MathView from "react-math-view";
 
@@ -7,7 +7,6 @@ import 'katex/dist/katex.min.css';
 import TeX from '@matejmazur/react-katex';
 
 function Key(props) {
-
   return (
   <div className="Key">
     <div className="Key-text">
@@ -19,18 +18,83 @@ function Key(props) {
   );
 }
 
+function Modal({ handleClose, show, children }) {
+  if (show) {
+    return (
+      <div className="Modal">
+        <div className="modal-content">
+          {children}
+          <button onClick={handleClose}>close</button>
+        </div>
+      </div>
+    );
+  }
+  else {
+    return null;
+  }
+}
+
+function Constants({constants}) {
+  return (
+    <div className="Constants">
+      <h2>Constants</h2>
+      <table>
+        <tr>
+          <th>Symbol</th>
+          <th>Value</th>
+          <th>Unit</th>
+        </tr>
+        {constants.map((constant) => (
+          <tr>
+            <td>{constant.symbol}</td>
+            <td>{constant.value}</td>
+            <td>{constant.unit}</td>
+          </tr>
+        ))}
+      </table>
+    </div>
+  );
+}
+
+function Engsymbols({engsymbols}) {
+  return (
+    <div className="Engsymbols">
+      <h2>Engineering Symbols</h2>
+      <table>
+        <tr>
+          <th>Symbol</th>
+          <th>Value</th>
+        </tr>
+        {engsymbols.map((engsymbol) => (
+          <tr>
+            <td>{engsymbol.symbol}</td>
+            <td>{engsymbol.value}</td>
+          </tr>
+        ))}
+      </table>
+    </div>
+  );
+}
+
 
 export default function App() {
   const [latex_out, setOut] = useState("");
   const [latex_in, setIn] = useState("");
   const mathinRef = useRef(null);
   const mathoutRef = useRef(null);
+
+  const [showConstants, setShowConstants] = useState(true);
+  const [showEngsymbols, setShowEngsymbols] = useState(false);
+
+  const [constants, setConstants] = useState([]);
+  const [engsymbols, setEngsymbols] = useState([]);
   
   var numeric = false;
 
   var request = "http://127.0.0.1:4242/latex"
 
   function calculate() {
+    console.log("calculate: " + mathinRef.current?.getValue());
     setIn(mathinRef.current?.getValue());
     if (numeric) {
       request = "http://127.0.0.1:4242/latex";
@@ -106,9 +170,65 @@ export default function App() {
     mathinRef.current?.executeCommand(['deleteBackward']); 
   }
 
+  const getData=()=>{
+    fetch('http://127.0.0.1:4242/constants.json'
+    ,{
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    }
+    )
+      .then(function(response){
+        console.log(response)
+        return response.json();
+      })
+      .then(function(res) {
+          setConstants(res.constants);
+          setEngsymbols(res.engsym);
+          console.log(res);
+          setMacros();
+        }
+      )
+  }
 
+  useEffect(() => { 
+    console.log("useEffect"); 
+    getData();
+  }, []);
+
+  function setMacros() {
+    constants.forEach(function (e) {
+      var sym = e.symbol;
+      var macro = e.macro;
+      mathinRef.current?.setOptions({
+        macros: {
+          ...mathinRef.current?.getOptions('macros'),
+          macro: sym,
+        }
+      });
+    });
+
+    engsymbols.forEach(function (e) {
+      var sym = e.symbol;
+      var macro = e.macro;
+      mathinRef.current?.setOptions({
+        macros: {
+          ...mathinRef.current?.getOptions('macros'),
+          macro: sym,
+        }
+      });
+    });
+  }
+  
   return (
     <div className="App">
+      <Modal show={showConstants} handleClose={() => setShowConstants(false)}>
+        <Constants constants={constants}/>
+      </Modal>
+      <Modal show={showEngsymbols} handleClose={() => setShowEngsymbols(false)}>
+        <Engsymbols engsymbols={engsymbols}/>
+      </Modal>
       <div className="Calculator">
         <div className="Screen">
           <MathView
@@ -133,7 +253,7 @@ export default function App() {
           <Key main="\text{MODE}"              shift=""           alpha="" />
           <Key main="\text{2nd}"               shift=""           alpha="" />
           
-          <Key main="\text{OPTN}"              shift=""           alpha="" />
+          <Key main="\text{OPTN}"              shift=""           alpha=""     onClick={() => setShowConstants(true)} />
           <Key main="="                        shift=""           alpha=""     onClick={() => insert("=", "", "")}/>
           <Key main="\blacktriangle"           shift=""           alpha=""     onClick={() => cursor("up")}       />
           <Key main="\blacktriangledown"       shift=""           alpha=""     onClick={() => cursor("down")}     />
