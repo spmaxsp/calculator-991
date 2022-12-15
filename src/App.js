@@ -23,8 +23,8 @@ function Modal({ handleClose, show, children }) {
     return (
       <div className="Modal">
         <div className="modal-content">
+          <button className="modal-close" onClick={handleClose}>X</button>
           {children}
-          <button onClick={handleClose}>close</button>
         </div>
       </div>
     );
@@ -39,16 +39,12 @@ function Constants({constants}) {
     <div className="Constants">
       <h2>Constants</h2>
       <table>
-        <tr>
-          <th>Symbol</th>
-          <th>Value</th>
-          <th>Unit</th>
-        </tr>
         {constants.map((constant) => (
           <tr>
-            <td>{constant.symbol}</td>
-            <td>{constant.value}</td>
-            <td>{constant.unit}</td>
+            <button className="Constant">
+              <h2>{constant.name} <TeX math={constant.sym} />:    
+              {constant.value} <TeX math={constant.unit} /></h2>
+            </button>
           </tr>
         ))}
       </table>
@@ -61,14 +57,12 @@ function Engsymbols({engsymbols}) {
     <div className="Engsymbols">
       <h2>Engineering Symbols</h2>
       <table>
-        <tr>
-          <th>Symbol</th>
-          <th>Value</th>
-        </tr>
         {engsymbols.map((engsymbol) => (
           <tr>
-            <td>{engsymbol.symbol}</td>
-            <td>{engsymbol.value}</td>
+            <button className="Constant">
+              <h2>{engsymbol.name} <TeX math={engsymbol.sym} />:    
+              {engsymbol.value}</h2>
+            </button>
           </tr>
         ))}
       </table>

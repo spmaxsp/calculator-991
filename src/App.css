@@ -91,7 +91,7 @@
 .modal-content {
   margin: 15% auto;
   padding: 20px;
-  width: 80%; 
+  width: 80vw; 
   /* From https://css.glass */
   background: rgba(156, 190, 255, 0.44);
   border-radius: 16px;
@@ -100,6 +100,30 @@
   -webkit-backdrop-filter: blur(12.2px);
   border: 1px solid rgba(156, 190, 255, 0.46);
   }
+  
+  .Constant {
+    font-weight: 0;
+    font-size: 14px;
+    color: rgb(0, 0, 0);
+    background: rgb(255, 255, 255);
+    width: 70vw;
+    height: 10vh;
+    margin: auto;
+    margin-top: 5px;
+    border: none;
+    box-shadow: rgb(0, 0, 0) 2px 2px 3px 0px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+.modal-close {
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  width: 8vh;
+  height: 8vh;
+  opacity: 0.9;
+}
 
 
 
