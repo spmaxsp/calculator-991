@@ -31,7 +31,7 @@ function Key(props) {
       <small className="Key-shift"><TeX math={props.shift} /></small>
       <small className="Key-alpha"><TeX math={props.alpha} /></small>
     </div>
-    <button className="Button" onMouseDown={(e) => handleMouseDown(e)}><TeX math={props.main} /></button>
+    <button className="Button" style={{background: props.color}} onMouseDown={(e) => handleMouseDown(e)}><TeX math={props.main} /></button>
   </div>
   );
 }
@@ -225,8 +225,8 @@ export default function App() {
           <Key main="7"           shift="" alpha=""  main_func={() => insert("7")}        shift_func={() => insert("7")}        alpha_func={() => insert("7")}        shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
           <Key main="8"           shift="" alpha=""  main_func={() => insert("8")}        shift_func={() => insert("8")}        alpha_func={() => insert("8")}        shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
           <Key main="9"           shift="" alpha=""  main_func={() => insert("9")}        shift_func={() => insert("9")}        alpha_func={() => insert("9")}        shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
-          <Key main="\text{DEL}"  shift="" alpha=""  main_func={() => back()}             shift_func={() => back()}             alpha_func={() => back()}             shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
-          <Key main="\text{CLR}"  shift="" alpha=""  main_func={() => clear()}            shift_func={() => clear()}            alpha_func={() => clear()}            shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
+          <Key main="\text{DEL}"  shift="" alpha=""  main_func={() => back()}             shift_func={() => back()}             alpha_func={() => back()}             shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} color="#8aadf4"/>
+          <Key main="\text{CLR}"  shift="" alpha=""  main_func={() => clear()}            shift_func={() => clear()}            alpha_func={() => clear()}            shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} color="#8aadf4"/>
 
           <Key main="4"           shift="" alpha=""  main_func={() => insert("4")}        shift_func={() => insert("4")}        alpha_func={() => insert("4")}        shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
           <Key main="5"           shift="" alpha=""  main_func={() => insert("5")}        shift_func={() => insert("5")}        alpha_func={() => insert("5")}        shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
