@@ -1,7 +1,10 @@
 import "./App.css";
 import { useEffect, useRef, useState } from "react";
 
-import MathView from "react-math-view";
+import { MathfieldElement } from 'mathlive';
+
+import dataConstants from "./data/constants.json";
+
 
 import 'katex/dist/katex.min.css';
 import TeX from '@matejmazur/react-katex';
@@ -49,7 +52,8 @@ function Modal({ handleClose, show, children }) {
   }
 }
 
-function Constants({constants}) {
+function Constants() {
+  var constants = dataConstants["constants"];
   return (
     <div className="Constants">
       <h2>Constants</h2>
@@ -57,8 +61,8 @@ function Constants({constants}) {
         {constants.map((constant) => (
           <tr>
             <button className="Constant">
-              <h2>{constant.name} <TeX math={constant.sym} />:    
-              {constant.value} <TeX math={constant.unit} /></h2>
+              <h2>{constant.name} <TeX math={constant.sym} />:  </h2><br/>  
+              {constant.value} <TeX math={constant.unit} />
             </button>
           </tr>
         ))}
@@ -67,7 +71,8 @@ function Constants({constants}) {
   );
 }
 
-function Engsymbols({engsymbols}) {
+function Engsymbols() {
+  var engsymbols = dataConstants["engsym"];
   return (
     <div className="Engsymbols">
       <h2>Engineering Symbols</h2>
@@ -89,48 +94,26 @@ function Engsymbols({engsymbols}) {
 export default function App() {
   const [latex_out, setOut] = useState("");
   const [latex_in, setIn] = useState("");
+
   const mathinRef = useRef(null);
   const mathoutRef = useRef(null);
 
-  const [showConstants, setShowConstants] = useState(true);
+  const [showConstants, setShowConstants] = useState(false);
   const [showEngsymbols, setShowEngsymbols] = useState(false);
-
-  const [constants, setConstants] = useState([]);
-  const [engsymbols, setEngsymbols] = useState([]);
   
   var numeric = false;
 
-  var request = "http://127.0.0.1:4242/latex"
+  const dummy_mfe = new MathfieldElement(); /// just to prevent the packager from removing it
+
+  const [alpha, toggleA] = useState(false);
+  const [shift, toggleS] = useState(false);
 
   function calculate() {
     console.log("calculate: " + mathinRef.current?.getValue());
-    setIn(mathinRef.current?.getValue());
-    if (numeric) {
-      request = "http://127.0.0.1:4242/latex";
-    }
-    else {
-      request = "http://127.0.0.1:4242/numerical";
-    }
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: mathinRef.current?.getValue()})
-    };
-    fetch(request, requestOptions)
-    .then(res => res.json())
-    .then((result) => {
-          setOut(result.data);
-          console.log("result: " + result.data);
-        },
-
-        (error) => {
-            console.log("error: " + error);
-        }
-    )
+    
   };
   
-  const [alpha, toggleA] = useState(false);
-  const [shift, toggleS] = useState(false);
+  
 
   function calc_numeric() {
     numeric = !numeric;
@@ -139,114 +122,70 @@ export default function App() {
 
   function insert(key) {
     //mathinRef.current?.focus(); 
-      mathinRef.current?.executeCommand(['insert', key]); 
+      mathinRef.current.executeCommand(['insert', key]); 
   };
 
   function cursor(key) {
     //mathinRef.current?.focus(); 
     if (key == "left") {
-      mathinRef.current?.executeCommand(['moveToPreviousChar']); 
+      mathinRef.current.executeCommand(['moveToPreviousChar']); 
     }
     else if (key == "right") {  
-      mathinRef.current?.executeCommand(['moveToNextChar']); 
+      mathinRef.current.executeCommand(['moveToNextChar']); 
     }
     else if (key == "up") {
-      mathinRef.current?.executeCommand(['moveUp']); 
+      mathinRef.current.executeCommand(['moveUp']); 
     }
     else if (key == "down") {
-      mathinRef.current?.executeCommand(['moveDown']); 
+      mathinRef.current.executeCommand(['moveDown']); 
     }
   }
 
   function clear() { 
     //mathinRef.current?.focus(); 
-    mathinRef.current?.executeCommand(['moveToMathFieldStart']); 
-    mathinRef.current?.executeCommand(['deleteToMathFieldEnd']); 
+    mathinRef.current.executeCommand(['moveToMathFieldStart']); 
+    mathinRef.current.executeCommand(['deleteToMathFieldEnd']); 
   }
 
   function back() { 
     //mathinRef.current?.focus(); 
-    mathinRef.current?.executeCommand(['deleteBackward']); 
+    mathinRef.current.executeCommand(['deleteBackward']); 
   }
 
   function noop(){}
 
-  const getData=()=>{
-    fetch('http://127.0.0.1:4242/constants.json'
-    ,{
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    }
-    )
-      .then(function(response){
-        console.log(response)
-        return response.json();
-      })
-      .then(function(res) {
-          setConstants(res.constants);
-          setEngsymbols(res.engsym);
-          console.log(res);
-          setMacros();
-        }
-      )
-  }
-
-  useEffect(() => { 
-    console.log("useEffect"); 
-    getData();
+  useEffect(() => {
+    // keyboard container
+    window.mathVirtualKeyboard.container = document.getElementById("keyboard");
   }, []);
-
-  function setMacros() {
-    constants.forEach(function (e) {
-      var sym = e.symbol;
-      var macro = e.macro;
-      mathinRef.current?.setOptions({
-        macros: {
-          ...mathinRef.current?.getOptions('macros'),
-          macro: sym,
-        }
-      });
-    });
-
-    engsymbols.forEach(function (e) {
-      var sym = e.symbol;
-      var macro = e.macro;
-      mathinRef.current?.setOptions({
-        macros: {
-          ...mathinRef.current?.getOptions('macros'),
-          macro: sym,
-        }
-      });
-    });
-  }
   
   return (
     <div className="App">
       <Modal show={showConstants} handleClose={() => setShowConstants(false)}>
-        <Constants constants={constants}/>
+        <Constants/>
       </Modal>
       <Modal show={showEngsymbols} handleClose={() => setShowEngsymbols(false)}>
-        <Engsymbols engsymbols={engsymbols}/>
+        <Engsymbols/>
       </Modal>
       <div className="Calculator">
         <div className="Screen">
-          <MathView
-            id="mf"
+          <math-field
             virtualKeyboardMode="off"
             virtuelKeyboardTrigger="off"
+
             value=""
             ref={mathinRef}
+            style={{display: "block", width: "100%"}}
           />
-          <MathView
+          <br/>
+          <math-field
             virtualKeyboardMode="off"
             virtuelKeyboardTrigger="off"
             value={latex_out}
             ref={mathoutRef}
           />
         </div>
-        <div className="Keyboard-upper">
+        <div className="Keyboard-upper" id="keyboard">
           <Key main="\text{SHIFT}"             shift=""           alpha=""          main_func={() => toggleS(true)}                  shift_func={() => toggleS(false)}                alpha_func={() => noop()}                   shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
           <Key main="\text{ALPHA}"             shift=""           alpha=""          main_func={() => toggleA(true)}                  shift_func={() => noop()}                        alpha_func={() => toggleA(false)}           shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
           <Key main="\leftarrow"               shift=""           alpha=""          main_func={() => cursor("left")}                 shift_func={() => cursor("left")}                alpha_func={() => cursor("left")}           shift_state={shift} alpha_state={alpha} resetS={() => toggleS(false)} resetA={() => toggleA(false)} />
